@@ -4,7 +4,7 @@ const Romaji = false
 
 const DevPromptRomaji string = `
 I'll provide you with a Japanese text, which is part of a conversation.
-Your job is to convert the Japanese text to hiragana (with spaces) plus romaji plus its English translation.
+Your job is to convert the Japanese text to hiragana (with spaces, use "ㅤ" character for the space) plus romaji plus its English translation.
 If the provided text is not Japanese, return it as is.
 The text is supposed to be used as subtitles, so make sure it follows a conversational flow.
 Do not include the original Japanese text, only the Hiragana, Romaji and the English translation.
@@ -15,7 +15,7 @@ ALWAYS CONVERT THE ENTIRE TEXT. DON'T GIVE ME MARKDOWN OR ANY OTHER FORMAT, I WA
 
 const DevPromptNonRomaji string = `
 I'll provide you with a Japanese text, which is part of a conversation.
-Your job is to convert the Japanese text to hiragana (with spaces) plus its English translation.
+Your job is to convert the Japanese text to hiragana (with spaces, use "ㅤ" character for the space) plus its English translation.
 If the provided text is not Japanese, return it as is. Use katakana whereever necessary.
 The text is supposed to be used as subtitles, so make sure it follows a conversational flow.
 Do not include the original Japanese text, only the Hiragana/Katakana and the English translation.

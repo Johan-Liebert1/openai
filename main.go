@@ -36,7 +36,7 @@ func sendOpenAIRequest(body OpenAIAPIRequest) (GPTResponse, error) {
 		return gptResponse, err
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 
 	defer cancel()
 
@@ -378,7 +378,7 @@ func main() {
 		}
 
 		openAiApiReq := OpenAIAPIRequest{
-			Model: "chatgpt-4o-latest",
+			Model: "gpt-4o-mini-2024-07-18",
 			Store: true,
 			Messages: GetConverstaionMessages(RequestMessage{
 				Role:    "user",
