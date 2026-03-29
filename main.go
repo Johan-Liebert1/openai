@@ -263,6 +263,52 @@ func handleArgs() bool {
 			subs.Write(fmt.Sprintf("%s", outputFname))
 		}
 
+	case "separate-jap-eng":
+		{
+			if len(os.Args) < 3 {
+				fmt.Println("Need a file name")
+				return true
+			}
+
+			fileName := os.Args[2]
+
+			subs := getSubtitles(fileName)
+
+			japLines := []string{}
+			engLines := []string{}
+
+			for idx, item := range subs.Items {
+				jap, eng := item.Lines[0], item.Lines[1]
+				japLines = append(japLines, fmt.Sprintf("%d\t%s", idx, jap.String()))
+				engLines = append(engLines, fmt.Sprintf("%d\t%s", idx, eng.String()))
+			}
+
+			outFileName := fmt.Sprintf("%s.output", fileName)
+			file, err := os.Create(outFileName)
+
+			if err != nil {
+				fmt.Printf("Err: %+v\n", err)
+				return true
+			}
+
+			_, err = file.WriteString(strings.Join(japLines, "\n"))
+			if err != nil {
+				fmt.Printf("Err: %+v\n", err)
+				return true
+			}
+
+			_, err = file.WriteString(strings.Join(engLines, "\n"))
+			if err != nil {
+				fmt.Printf("Err: %+v\n", err)
+				return true
+			}
+
+			fmt.Printf("Wrote to %s\n", outFileName)
+
+			// Always exit the program
+			return true
+		}
+
 	default:
 		{
 			inputSubsFileName = arg
