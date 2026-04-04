@@ -378,7 +378,7 @@ func main() {
 		}
 
 		openAiApiReq := OpenAIAPIRequest{
-			Model: "gpt-4o-mini-2024-07-18",
+			Model: "gpt-4.1-2025-04-14",
 			Store: true,
 			Messages: GetConverstaionMessages(RequestMessage{
 				Role:    "user",
