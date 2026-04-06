@@ -26,6 +26,7 @@ const SaveAsASS = true
 
 var SpewPrinter = spew.ConfigState{Indent: "    ", MaxDepth: 5}
 var inputSubsFileName string
+var outname string = "newthing"
 
 func sendOpenAIRequest(body OpenAIAPIRequest) (GPTResponse, error) {
 	gptResponse := GPTResponse{}
@@ -197,7 +198,7 @@ func createNewSubsFile(
 	}
 
 	s := astisub.Subtitles{Items: newSubs, Metadata: &astisub.Metadata{}}
-	s.Write(fmt.Sprintf("./newthing.%s", filetype))
+	s.Write(fmt.Sprintf("./%s.%s", outname, filetype))
 }
 
 // returns whether to exit program or not
@@ -312,6 +313,11 @@ func handleArgs() bool {
 	default:
 		{
 			inputSubsFileName = arg
+
+			if len(os.Args) > 2 {
+				outname = os.Args[2]
+			}
+
 			return false
 		}
 	}
