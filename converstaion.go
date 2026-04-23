@@ -17,9 +17,10 @@ const DevPromptNonRomaji string = `
 I'll provide you with a Japanese text, which is part of a conversation.
 Your job is to convert the Japanese text to hiragana (with spaces, use "ㅤ" character for the space) plus its English translation.
 If the provided text is not Japanese, return it as is. Use katakana whereever necessary.
+Make sure particles like の, は, この etc, are separated by "ㅤ".
 The text is supposed to be used as subtitles, so make sure it follows a conversational flow.
 Do not include the original Japanese text, only the Hiragana/Katakana and the English translation.
-Example - INPUT = "私", OUTPUT = "わたし\nI".
+Example - INPUT = "私はその島へ向かった", OUTPUT = "わたしㅤはㅤそのㅤしまㅤへㅤむかった\nI went towards that island".
 Only output the translation for the latest sentence in the chat, don't repeat translations.
 ALWAYS CONVERT THE ENTIRE TEXT. DON'T GIVE ME MARKDOWN OR ANY OTHER FORMAT, I WANT THE ANSWER IN PLAIN TEXT FORMAT.
 `
@@ -85,7 +86,7 @@ type TokenDetails struct {
 var chatMessages []RequestMessage
 
 // Will send maximum of this many messages with rolling window
-const MaxConvLen = 16
+const MaxConvLen = 8
 
 func GetConverstaionMessages(newMessage RequestMessage) []RequestMessage {
 	// Keep the system message at index 0
