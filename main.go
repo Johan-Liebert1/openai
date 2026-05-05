@@ -310,6 +310,24 @@ func handleArgs() bool {
 			return true
 		}
 
+	// extract lines from subtitle file
+	case "extract-lines":
+		{
+			if len(os.Args) < 3 {
+				fmt.Println("Usage: ./exe extract-lines <subs file name>")
+				os.Exit(1)
+			}
+
+			fileName := os.Args[2]
+			subs := getSubtitles(fileName)
+
+			for _, item := range subs.Items {
+				for _, line := range item.Lines {
+					fmt.Println(line)
+				}
+			}
+		}
+
 	default:
 		{
 			inputSubsFileName = arg

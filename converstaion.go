@@ -22,6 +22,7 @@ The text is supposed to be used as subtitles, so make sure it follows a conversa
 Do not include the original Japanese text, only the Hiragana/Katakana and the English translation.
 Example - INPUT = "私はその島へ向かった", OUTPUT = "わたしㅤはㅤそのㅤしまㅤへㅤむかった\nI went towards that island".
 Only output the translation for the latest sentence in the chat, don't repeat translations.
+If there's something in the beginning of the sentence inside parenthesis, it's probably the name of the character, so translate that accordingly.
 ALWAYS CONVERT THE ENTIRE TEXT. DON'T GIVE ME MARKDOWN OR ANY OTHER FORMAT, I WANT THE ANSWER IN PLAIN TEXT FORMAT.
 `
 
