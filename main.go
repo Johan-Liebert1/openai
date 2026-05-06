@@ -264,7 +264,7 @@ func handleArgs() bool {
 			subs.Write(fmt.Sprintf("%s", outputFname))
 		}
 
-	case "separate-jap-eng":
+	case "separate-jap-eng-subs":
 		{
 			if len(os.Args) < 3 {
 				fmt.Println("Need a file name")
@@ -308,6 +308,94 @@ func handleArgs() bool {
 
 			// Always exit the program
 			return true
+		}
+
+	case "separate-jap-eng":
+		{
+			if len(os.Args) != 3 {
+				fmt.Printf("Usage: ./exe convert <original file>\n")
+				return true
+			}
+
+			filename := os.Args[2]
+
+			file, err := os.ReadFile(filename)
+
+			if err != nil {
+				fmt.Printf("Error reading file '%s': %+v", filename, err)
+				os.Exit(1)
+			}
+
+			fileStr := string(file)
+
+			japLines := [][]string{}
+			engLines := [][]string{}
+
+			lines := strings.Split(fileStr, "\n")
+			idx := 0
+
+			prevJap := false
+
+			for idx < len(lines) {
+				if len(strings.Trim(lines[idx], "\n \t")) == 0 {
+					idx++
+					continue
+				}
+
+				line := lines[idx] + "\n"
+
+				if 0 <= line[0] && line[0] <= 127 {
+					if prevJap {
+						engLines = append(engLines, []string{line})
+					} else {
+						engLines[len(engLines)-1] = append(engLines[len(engLines)-1], line)
+					}
+
+					prevJap = false
+				} else {
+					if prevJap {
+						// get the last one and turn it into an array
+						japLines[len(japLines)-1] = append(japLines[len(japLines)-1], line)
+					} else {
+						japLines = append(japLines, []string{line})
+					}
+
+					prevJap = true
+				}
+
+				idx++
+			}
+
+			newFileName := fmt.Sprintf("%s.new", filename)
+
+			newFile, err := os.Create(newFileName)
+
+			if err != nil {
+				fmt.Printf("Failed to create file '%s': %+v\n", newFileName, err)
+				os.Exit(1)
+			}
+
+			sb := strings.Builder{}
+
+			for i, j := range japLines {
+				s := fmt.Sprintf("%03d %s", i, strings.Join(j, ""))
+
+				if _, err := sb.WriteString(s); err != nil {
+					fmt.Printf("String builder failed: %+v\n", err)
+				}
+			}
+
+			for i, e := range engLines {
+				s := fmt.Sprintf("%03d %s", i, strings.Join(e, ""))
+
+				if _, err := sb.WriteString(s); err != nil {
+					fmt.Printf("String builder failed: %+v\n", err)
+				}
+			}
+
+			if _, err := newFile.WriteString(sb.String()); err != nil {
+				fmt.Printf("Writing to file '%s' failed: %+v\n", newFileName, err)
+			}
 		}
 
 	// extract lines from subtitle file
