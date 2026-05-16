@@ -116,15 +116,16 @@ func getSubtitles(path string) *astisub.Subtitles {
 }
 
 func getJSONArray(subtitles *astisub.Subtitles, start, end int) string {
-	s := "["
+	var s strings.Builder
+	s.WriteString("[")
 
 	for _, item := range subtitles.Items[start:end] {
-		s += fmt.Sprintf(`"%s",`, item.String())
+		s.WriteString(item.String())
 	}
 
-	s += "]"
+	s.WriteString("]")
 
-	return s
+	return s.String()
 }
 
 func writeSubsStringArrayToFile(subs []string, start, batch int) {
@@ -201,6 +202,21 @@ func createNewSubsFile(
 	s.Write(fmt.Sprintf("./%s.%s", outname, filetype))
 }
 
+func isMostlyAscii(line string) bool {
+	totalChars := 0
+	asciiChars := 0
+
+	for _, c := range line {
+		totalChars += 1
+
+		if c <= 127 {
+			asciiChars += 1
+		}
+	}
+
+	return (float64(asciiChars) / float64(totalChars)) > 0.7
+}
+
 // returns whether to exit program or not
 func handleArgs() bool {
 	arg := os.Args[1]
@@ -264,6 +280,7 @@ func handleArgs() bool {
 			subs.Write(fmt.Sprintf("%s", outputFname))
 		}
 
+	// From a subtitles file, separate Jap/Eng lines into a separate file
 	case "separate-jap-eng-subs":
 		{
 			if len(os.Args) < 3 {
@@ -310,12 +327,18 @@ func handleArgs() bool {
 			return true
 		}
 
+	// From a NON-Subtitles file, separate Jap/Eng lines into a separate file
+	// The file is expected to be in the following format
+	// <Jap line(s)>
+	// <Eng translation line(s)>
 	case "separate-jap-eng":
 		{
 			if len(os.Args) != 3 {
 				fmt.Printf("Usage: ./exe convert <original file>\n")
 				return true
 			}
+
+			startNumbering := 0
 
 			filename := os.Args[2]
 
@@ -344,7 +367,7 @@ func handleArgs() bool {
 
 				line := lines[idx] + "\n"
 
-				if 0 <= line[0] && line[0] <= 127 {
+				if isMostlyAscii(line) {
 					if prevJap {
 						engLines = append(engLines, []string{line})
 					} else {
@@ -378,7 +401,7 @@ func handleArgs() bool {
 			sb := strings.Builder{}
 
 			for i, j := range japLines {
-				s := fmt.Sprintf("%03d %s", i, strings.Join(j, ""))
+				s := fmt.Sprintf("%03d %s", i+startNumbering, strings.Join(j, ""))
 
 				if _, err := sb.WriteString(s); err != nil {
 					fmt.Printf("String builder failed: %+v\n", err)
@@ -386,7 +409,7 @@ func handleArgs() bool {
 			}
 
 			for i, e := range engLines {
-				s := fmt.Sprintf("%03d %s", i, strings.Join(e, ""))
+				s := fmt.Sprintf("%03d %s", i+startNumbering, strings.Join(e, ""))
 
 				if _, err := sb.WriteString(s); err != nil {
 					fmt.Printf("String builder failed: %+v\n", err)
@@ -416,7 +439,7 @@ func handleArgs() bool {
 			}
 		}
 
-	default:
+	case "make-subtitles":
 		{
 			inputSubsFileName = arg
 
@@ -425,6 +448,23 @@ func handleArgs() bool {
 			}
 
 			return false
+		}
+
+	case "make-non-subtitles":
+		{
+			inputSubsFileName = arg
+
+			if len(os.Args) > 2 {
+				outname = os.Args[2]
+			}
+
+			return false
+		}
+
+	default:
+		{
+			fmt.Printf("Option %s not understood\n", os.Args[1]) //
+			return true
 		}
 	}
 
