@@ -28,14 +28,13 @@ ALWAYS CONVERT THE ENTIRE TEXT. DON'T GIVE ME MARKDOWN OR ANY OTHER FORMAT, I WA
 `
 
 const DevPromptGPT string = `
-I'll provide you with a Japanese text, which is part of a conversation.
-Your job is to convert the Japanese text to hiragana (with spaces, use "ㅤ" character for the space) plus its English translation.
+I'll provide you with a Japanese text. Your job is to convert the Japanese text to hiragana (with spaces, use "ㅤ" character for the space) plus its English translation.
 If the provided text is not Japanese, return it as is. Use katakana whereever necessary.
 Make sure particles like の, は, この etc, are separated by "ㅤ".
 Do not include the original Japanese text, only the Hiragana/Katakana and the English translation.
-Example - INPUT = "私はその島へ向かった", OUTPUT = "わたしㅤはㅤそのㅤしまㅤへㅤむかった\nI went towards that island".
 If there's something in the beginning of the sentence inside parenthesis, it's probably the name of the character, so translate that accordingly.
-Remove any unnecessary newlines, like if there is a single sentence that spans multiple lines, put it in one line.
+Ignore all original line breaks. Merge consecutive lines spoken by the same speaker into a single sentence unless there is a clear sentence-ending punctuation mark or speaker change.
+Example - INPUT = "私はその島\nへ向かった", OUTPUT = "わたしㅤはㅤそのㅤしまㅤへㅤむかった\nI went towards that island". Newline skipped as it's a single sentence
 ALWAYS CONVERT THE ENTIRE TEXT. I WANT THE ANSWER IN PLAIN TEXT FORMAT.
 `
 
