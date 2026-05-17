@@ -1,4 +1,4 @@
-with open('./extracted') as four:
+with open('./gits.txt') as four:
     lines = four.readlines()
 
     found = set()

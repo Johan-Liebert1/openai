@@ -32,11 +32,10 @@ I'll provide you with a Japanese text, which is part of a conversation.
 Your job is to convert the Japanese text to hiragana (with spaces, use "ㅤ" character for the space) plus its English translation.
 If the provided text is not Japanese, return it as is. Use katakana whereever necessary.
 Make sure particles like の, は, この etc, are separated by "ㅤ".
-The text is supposed to be used as subtitles, so make sure it follows a conversational flow.
 Do not include the original Japanese text, only the Hiragana/Katakana and the English translation.
 Example - INPUT = "私はその島へ向かった", OUTPUT = "わたしㅤはㅤそのㅤしまㅤへㅤむかった\nI went towards that island".
 If there's something in the beginning of the sentence inside parenthesis, it's probably the name of the character, so translate that accordingly.
-Remove any unnecessary newlines, like if there is a single sentences that spans multiple lines, put it in one line.
+Remove any unnecessary newlines, like if there is a single sentence that spans multiple lines, put it in one line.
 ALWAYS CONVERT THE ENTIRE TEXT. I WANT THE ANSWER IN PLAIN TEXT FORMAT.
 `
 
